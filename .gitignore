@@ -48,3 +48,6 @@ nosetests.xml
 
 # Translations
 *.mo
+
+# JSON data files
+.json
