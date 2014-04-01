@@ -50,4 +50,4 @@ nosetests.xml
 *.mo
 
 # JSON data files
-.json
+*.json
