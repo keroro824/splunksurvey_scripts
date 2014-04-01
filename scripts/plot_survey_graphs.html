@@ -1,0 +1,118 @@
+
+<html>
+<head>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<style type="text/css">
+body{font-family: Arial, sans-serif;font-size:10px;}
+.axis path,.axis line {fill: none;stroke:#b6b6b6;shape-rendering: crispEdges;}
+/*.tick line{fill:none;stroke:none;}*/
+.tick text{fill:#999;}
+g.question.active{cursor:pointer;}
+text.label{font-size:12px;font-weight:bold;cursor:pointer;}
+text.value{font-size:12px;font-weight:bold;}
+</style>
+</head>
+<body>
+
+<script type="text/javascript">
+
+var margin = {top: 20, right: 900, bottom: 0, left: 20},
+  width = 350,
+  height = 1450;
+
+var cust_min = 1,
+  cust_max = 13;
+
+var blues = ['#deebf7', '#bad4e9', '#9abcda', '#7ea3c9', '#648bb7', '#4e73a4', '#385c92', '#22467e', '#08306b']
+
+var greens = ['#9acd32', '#8fbf2e', '#81b02a', '#74a225', '#64941f', '#548819', '#407c11', '#296f08', '#006400']
+
+var reds = ['#ffa500', '#ff8c3e', '#fa7450', '#f15d57', '#e54856', '#d6354e', '#c62442', '#b41331', '#a1041d', '#8b0000']
+
+var x = d3.scale.linear()
+  .range([0, width]);
+
+var xAxis = d3.svg.axis()
+  .scale(x)
+  .orient("top");
+
+var formatCusts = d3.format("00");
+xAxis.tickFormat(formatCusts);
+
+var svg = d3.select("body").append("svg")
+  .attr("width", width + margin.left + margin.right)
+  .attr("height", height + margin.top + margin.bottom)
+  .style("margin-left", margin.left + "px")
+  .append("g")
+  .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+d3.json("splunksurvey_polished.json", function(data) {
+  x.domain([cust_min, cust_max]);
+  var xScale = d3.scale.linear()
+    .domain([cust_min, cust_max])
+    .range([0, width]);
+
+  svg.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + 0 + ")")
+    .call(xAxis);
+
+  for (var j = 0; j < data.length; j++) {
+    var g = svg.append("g").attr("class","journal");
+
+    var circles = g.selectAll("circle")
+      .data(data[j]['customers'])
+      .enter()
+      .append("circle");
+
+    var text = g.selectAll("text")
+      .data(data[j]['customers'])
+      .enter()
+      .append("text");
+
+    circles
+      .attr("cx", function(d, i) { return xScale(d[0]); })
+      .attr("cy", j*20+20)
+      .attr("r",5)
+      .style("fill", color(j))
+
+    g.append("text")
+      .attr("y", j*20+25)
+      .attr("x",width+20)
+      .attr("class","label")
+      .text(data[j]['response'])
+      .style("fill", color(j))
+  };
+
+  function color(j) {
+    if (data[j]['questionID'] == 528409270) {
+      return blues[j]; // 9 answers
+    } else if (data[j]['questionID'] == 528409506) {
+      return greens[j-9]; // 8 answers
+    } else if (data[j]['questionID'] == 528409696) {
+      return reds[j-17]; // 10 answers
+    } else if (data[j]['questionID'] == 528409997) {
+      return blues[j-27+1]; // 7 answers
+    } else if (data[j]['questionID'] == 528410090) {
+      return greens[j-34]; // 9 answers
+    } else if (data[j]['questionID'] == 528410702) {
+      return reds[(j-43)*2]; // 5 answers
+    } else if (data[j]['questionID'] == 528410987) {
+      return blues[j-48+1]; // 7 answers
+    } else if (data[j]['questionID'] == 528411265) {
+      return greens[j-55+1]; // 6 answers
+    } else if (data[j]['questionID'] == 528411498) {
+      return reds[j-61+1]; // 6 answers
+    } else if (data[j]['questionID'] == 528411644) {
+      return blues[(j-67)*2]; // 5 answers
+    }
+  }
+
+});
+
+
+</script>
+
+</body>
+</html>
