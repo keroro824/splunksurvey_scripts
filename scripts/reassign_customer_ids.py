@@ -1,6 +1,6 @@
 import json
 
-INFILE = 'splunksurvey.json'
+INFILE = 'data.json'
 OUTFILE = 'splunksurvey_polished.json'
 
 lookup = {}
@@ -20,5 +20,6 @@ for question in new:
   for customer in customers:
     customer[0] = lookup[customer[0]]
 outfile = open(OUTFILE, "w")
-print new
+
+print len(lookup)
 json.dump(new, outfile, indent=4)
